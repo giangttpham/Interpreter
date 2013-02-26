@@ -23,6 +23,14 @@ public class Evaluator implements Expression{
             	Expression subExpression = new Multiply(expressionStack.pop(), expressionStack.pop());
             	expressionStack.push(subExpression);
             }
+            else if (token.equals("/")) {
+            	// it's necessary remove first the right operand from the stack
+                Expression right = expressionStack.pop();
+                // ..and after the left one
+                Expression left = expressionStack.pop();
+                Expression subExpression = new Divide(left, right);
+                expressionStack.push( subExpression );
+            }
             else                        
                 expressionStack.push( new Number(token) );
         }
