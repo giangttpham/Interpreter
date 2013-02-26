@@ -36,18 +36,18 @@ public class Evaluator implements Expression{
             	Expression subExpression = new Sine(operand);
             	expressionStack.push(subExpression);
             }
+            else if (token.equals("cos")) {
+            	Expression operand = expressionStack.pop();
+            	Expression subExpression = new Cosine(operand);
+            	expressionStack.push(subExpression);
+            }
             else                        
                 expressionStack.push( new Number(token) );
         }
         syntaxTree = expressionStack.pop();
     }
  
-//	public Evaluator(Stack<Character> sentence){
-//		Stack<Expression> expressionStack = new Stack<Expression>();
-//		for (int i =0; i < sentence.size(); i++){
-//			
-//		}
-//	}
+
     @Override
     public double interpret() {
         return syntaxTree.interpret();
