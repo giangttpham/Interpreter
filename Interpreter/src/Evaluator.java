@@ -19,6 +19,10 @@ public class Evaluator implements Expression{
                 Expression subExpression = new Minus(left, right);
                 expressionStack.push( subExpression );
             }
+            else if (token.equals("*")) {
+            	Expression subExpression = new Multiply(expressionStack.pop(), expressionStack.pop());
+            	expressionStack.push(subExpression);
+            }
             else                        
                 expressionStack.push( new Number(token) );
         }
