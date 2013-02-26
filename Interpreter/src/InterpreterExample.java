@@ -14,7 +14,7 @@ public class InterpreterExample {
 		Evaluator sentence = new Evaluator(expression);
 	
 
-		int result = sentence.interpret();
+		double result = sentence.interpret();
 		System.out.print("The result is: ");
 		System.out.println(result);
 

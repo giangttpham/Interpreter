@@ -31,6 +31,11 @@ public class Evaluator implements Expression{
                 Expression subExpression = new Divide(left, right);
                 expressionStack.push( subExpression );
             }
+            else if (token.equals("sin")) {
+            	Expression operand = expressionStack.pop();
+            	Expression subExpression = new Sine(operand);
+            	expressionStack.push(subExpression);
+            }
             else                        
                 expressionStack.push( new Number(token) );
         }
@@ -44,7 +49,7 @@ public class Evaluator implements Expression{
 //		}
 //	}
     @Override
-    public int interpret() {
+    public double interpret() {
         return syntaxTree.interpret();
     }
 }

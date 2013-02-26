@@ -10,7 +10,7 @@ public class Multiply implements Expression{
 	}
 	
 	@Override
-	public int interpret() {
+	public double interpret() {
 		// TODO Auto-generated method stub
 		return leftOperand.interpret() * rightOperand.interpret();
 	}

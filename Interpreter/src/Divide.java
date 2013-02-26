@@ -9,7 +9,7 @@ public class Divide implements Expression {
 	}
 	
 	@Override
-	public int interpret() {
+	public double interpret() {
 		// TODO Auto-generated method stub
 		if (rightOperand.interpret() == 0) {
 			System.out.println("Can't devide by 0");

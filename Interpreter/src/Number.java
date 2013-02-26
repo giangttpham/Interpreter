@@ -6,7 +6,7 @@ public class Number implements Expression{
     
     @Override
 //    public int interpret(Map<String,Expression> variables)  { return number; }
-    public int interpret()  { return number; }
+    public double interpret()  { return (double)number; }
 
 
 }

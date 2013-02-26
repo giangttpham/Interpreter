@@ -7,7 +7,7 @@ public class Minus implements Expression{
 	}
 
 	@Override
-	public int interpret()  { 
+	public double interpret()  { 
 		return leftOperand.interpret() - rightOperand.interpret();
 	}
 }
