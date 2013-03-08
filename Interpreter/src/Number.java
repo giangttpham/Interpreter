@@ -1,12 +1,11 @@
+import java.util.Map;
+
 
 
 public class Number implements Expression{
-	private int number;
-    public Number(String number)       { this.number = Integer.parseInt(number); }
+
+    private double number;
+    public Number(double number)       { this.number = number; }
+    public double interpret(Map<String,Expression> variables)  { return number; }
     
-    @Override
-//    public int interpret(Map<String,Expression> variables)  { return number; }
-    public double interpret()  { return (double)number; }
-
-
 }

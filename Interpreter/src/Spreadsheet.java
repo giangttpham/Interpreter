@@ -9,72 +9,64 @@ import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
 
-public class Spreadsheet extends JFrame{
-	TextField firstName;
-	TextField lastName;
-	Label fullName;
+public class Spreadsheet extends JFrame implements ActionListener{
+
+	int numberOfColumns = 7;
+	
 	Button done = new Button( "Done" );
+	Map<String,Expression> variables = new HashMap<String,Expression>();
+	
+	TextField eqtA = new TextField(numberOfColumns);
+	TextField eqtB = new TextField(numberOfColumns);
+	TextField eqtC = new TextField(numberOfColumns);
+	TextField eqtD = new TextField(numberOfColumns);
+	TextField eqtE = new TextField(numberOfColumns);
+	TextField eqtF = new TextField(numberOfColumns);
+	TextField eqtG = new TextField(numberOfColumns);
+	TextField eqtH = new TextField(numberOfColumns);
+	TextField eqtI = new TextField(numberOfColumns);
+	
+	TextField valueA = new TextField(numberOfColumns);
+	TextField valueB = new TextField(numberOfColumns);
+	TextField valueC = new TextField(numberOfColumns);
+	TextField valueD = new TextField(numberOfColumns);
+	TextField valueE = new TextField(numberOfColumns);
+	TextField valueF = new TextField(numberOfColumns);
+	TextField valueG = new TextField(numberOfColumns);
+	TextField valueH = new TextField(numberOfColumns);
+	TextField valueI = new TextField(numberOfColumns);
 
 	public Spreadsheet( int width, int height ) {
 		setTitle( "Button Example" );
 		setSize( width, height );
-		setLayout( new GridLayout(3,1) );
+		setLayout( new GridLayout(4,1) );
 
-		int numberOfColumns = 5;
+		
 
-		//			Panel title = new Panel(new FlowLayout());
-		//			Label column = new Label();
-		//			column.setAlignment(Label.LEFT);
-		////			column.setSize(5, 1);
-		//			title.add(new Label("View",Label.CENTER));
-		//			char name = 'A';
-		//			System.out.println(name + 2);
-		//			for (int i = 0; i < 9; i++) {
-		//				column.setText("$"+name);
-		//				
-		////				title.add(new Label("$" + name, Label.LEFT));
-		//				title.add(column);
-		//				name++;
-		//			}
-		//			add(title);
-
+		//title row
 		Panel title = new Panel(new FlowLayout());
-//		Label colA = new Label("$A",Label.LEFT);
-//		colA.setSize(numberOfColumns,1);
-//		title.add(colA);
-//		
-//		Label colB = new Label("$B",Label.LEFT);
-//		colA.setSize(numberOfColumns,1);
-//		title.add(colB);
 		char name = 'A';
 		Label col;
-		Dimension d = new Dimension(55,1);
+		Dimension d = new Dimension(70,1);
 		
 		for (int i = 0; i <9; i++){
 			col = new Label ("$" + name, Label.CENTER);
-//			col.setSize(10,1);
-			
 			col.setPreferredSize(d);
 			name++;
 			title.add(col);
 		}
 	
 		add(title);
+		
 		//equation view
 		Panel equation = new Panel(new FlowLayout());
-		TextField eqtA = new TextField(numberOfColumns);
-		TextField eqtB = new TextField(numberOfColumns);
-		TextField eqtC = new TextField(numberOfColumns);
-		TextField eqtD = new TextField(numberOfColumns);
-		TextField eqtE = new TextField(numberOfColumns);
-		TextField eqtF = new TextField(numberOfColumns);
-		TextField eqtG = new TextField(numberOfColumns);
-		TextField eqtH = new TextField(numberOfColumns);
-		TextField eqtI = new TextField(numberOfColumns);
+	
 
 		equation.add(eqtA);
 		equation.add(eqtB);
@@ -89,15 +81,7 @@ public class Spreadsheet extends JFrame{
 
 		//value view
 		Panel value = new Panel(new FlowLayout());
-		TextField valueA = new TextField(numberOfColumns);
-		TextField valueB = new TextField(numberOfColumns);
-		TextField valueC = new TextField(numberOfColumns);
-		TextField valueD = new TextField(numberOfColumns);
-		TextField valueE = new TextField(numberOfColumns);
-		TextField valueF = new TextField(numberOfColumns);
-		TextField valueG = new TextField(numberOfColumns);
-		TextField valueH = new TextField(numberOfColumns);
-		TextField valueI = new TextField(numberOfColumns);
+	
 
 		value.add(valueA);
 		value.add(valueB);
@@ -110,14 +94,100 @@ public class Spreadsheet extends JFrame{
 		value.add(valueI);
 		add(value);
 
+		//done button
+		Panel button = new Panel(new FlowLayout(FlowLayout.CENTER));
+		button.add(done);
+		add(button);
+		done.addActionListener(this);
+		
 		setVisible(true);
 	}
 
-	public static void main( String args[] ) {
-		new Spreadsheet( 600, 150 );
+	
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+
+
+		setVariables();
+
+		valueA.setText(Double.toString(getResult(eqtA.getText())));
+		variables.put("$A", new Number(getResult(eqtA.getText())));
+		
+		valueB.setText(Double.toString(getResult(eqtB.getText())));
+		variables.put("$B", new Number(getResult(eqtB.getText())));
+		
+		valueC.setText(Double.toString(getResult(eqtC.getText())));
+		variables.put("$C", new Number(getResult(eqtC.getText())));
+		
+		valueD.setText(Double.toString(getResult(eqtD.getText())));
+		variables.put("$D", new Number(getResult(eqtD.getText())));
+		
+		valueE.setText(Double.toString(getResult(eqtE.getText())));
+		variables.put("$E", new Number(getResult(eqtE.getText())));
+		
+		valueF.setText(Double.toString(getResult(eqtF.getText())));
+		variables.put("$F", new Number(getResult(eqtF.getText())));
+		
+		valueG.setText(Double.toString(getResult(eqtG.getText())));
+		variables.put("$G", new Number(getResult(eqtG.getText())));
+		
+		valueH.setText(Double.toString(getResult(eqtH.getText())));
+		variables.put("$H", new Number(getResult(eqtH.getText())));
+		
+		valueI.setText(Double.toString(getResult(eqtI.getText())));
+		variables.put("$I", new Number(getResult(eqtI.getText())));
+		
+
 	}
 
+	public void setVariables(){
 
+		if (isNumber(eqtA.getText()))
+			variables.put("$A", new Number(Double.parseDouble(eqtA.getText())));
+		if (isNumber(eqtB.getText()))
+			variables.put("$B", new Number(Double.parseDouble(eqtB.getText())));
+		if (isNumber(eqtC.getText()))
+			variables.put("$C", new Number(Double.parseDouble(eqtC.getText())));
+		if (isNumber(eqtD.getText()))
+			variables.put("$D", new Number(Double.parseDouble(eqtD.getText())));
+		if (isNumber(eqtE.getText()))
+			variables.put("$E", new Number(Double.parseDouble(eqtE.getText())));
+		if (isNumber(eqtF.getText()))
+			variables.put("$F", new Number(Double.parseDouble(eqtF.getText())));
+		if (isNumber(eqtG.getText()))
+			variables.put("$G", new Number(Double.parseDouble(eqtG.getText())));
+		if (isNumber(eqtH.getText()))
+			variables.put("$I", new Number(Double.parseDouble(eqtH.getText())));
+		if (isNumber(eqtI.getText()))
+			variables.put("$I", new Number(Double.parseDouble(eqtI.getText())));
+	
+
+
+	}
+	public Double getResult(String expression){
+
+		Evaluator sentence = new Evaluator(expression);
+		Double result = sentence.interpret(variables);
+
+		return result;
+	}
+
+	public boolean isNumber(String curr){
+		try {
+			Double.parseDouble(curr);
+		}
+		catch(NumberFormatException e){
+			return false;
+		}
+
+		return true;
+	}
+
+	public static void main( String args[] ) {
+		new Spreadsheet( 1000, 150 );
+	}
 }
 
 

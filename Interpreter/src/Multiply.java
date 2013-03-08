@@ -1,3 +1,5 @@
+import java.util.Map;
+
 
 public class Multiply implements Expression{
 
@@ -10,9 +12,9 @@ public class Multiply implements Expression{
 	}
 	
 	@Override
-	public double interpret() {
+	public double interpret(Map<String,Expression> variables) {
 		// TODO Auto-generated method stub
-		return leftOperand.interpret() * rightOperand.interpret();
+		return leftOperand.interpret(variables) * rightOperand.interpret(variables);
 	}
 
 }

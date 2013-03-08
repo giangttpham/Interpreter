@@ -1,3 +1,5 @@
+import java.util.Map;
+
 
 public class Sine implements Expression {
 	Expression operand;
@@ -7,8 +9,8 @@ public class Sine implements Expression {
 	}
 
 	@Override
-	public double interpret() {
-		return Math.sin(Math.toRadians(operand.interpret()));
+	public double interpret(Map<String,Expression> variables) {
+		return Math.sin(Math.toRadians(operand.interpret(variables)));
 	}
 	
 	

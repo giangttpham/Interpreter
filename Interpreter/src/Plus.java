@@ -1,3 +1,5 @@
+import java.util.Map;
+
 public class Plus implements Expression{
 	Expression leftOperand;
     Expression rightOperand;
@@ -7,8 +9,8 @@ public class Plus implements Expression{
     }
  
     @Override
-    public double interpret()  { 
-        return leftOperand.interpret() + rightOperand.interpret();
+    public double interpret(Map<String,Expression> variables)  { 
+        return leftOperand.interpret(variables) + rightOperand.interpret(variables);
     }
 
 }

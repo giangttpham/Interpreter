@@ -1,3 +1,5 @@
+import java.util.Map;
+
 
 public class Divide implements Expression {
 
@@ -9,14 +11,14 @@ public class Divide implements Expression {
 	}
 	
 	@Override
-	public double interpret() {
+	public double interpret(Map<String,Expression> variables) {
 		// TODO Auto-generated method stub
-		if (rightOperand.interpret() == 0) {
+		if (rightOperand.interpret(variables) == 0) {
 			System.out.println("Can't devide by 0");
 			return 0;
 		}
 		else
-			return leftOperand.interpret() / rightOperand.interpret();
+			return leftOperand.interpret(variables) / rightOperand.interpret(variables);
 	}
 
 }

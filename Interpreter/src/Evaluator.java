@@ -1,3 +1,4 @@
+import java.util.Map;
 import java.util.Stack;
 
 
@@ -41,15 +42,27 @@ public class Evaluator implements Expression{
             	Expression subExpression = new Cosine(operand);
             	expressionStack.push(subExpression);
             }
+            else if (isNumber(token)) {
+            	expressionStack.push(new Number(Double.parseDouble(token)));
+            }
             else                        
-                expressionStack.push( new Number(token) );
+            	expressionStack.push( new Variable(token) );
         }
         syntaxTree = expressionStack.pop();
     }
  
+    public boolean isNumber(String curr){
+		try {
+			Double.parseDouble(curr);
+		}
+		catch(NumberFormatException e){
+			return false;
+		}
 
-    @Override
-    public double interpret() {
-        return syntaxTree.interpret();
+		return true;
+	}
+
+    public double interpret(Map<String,Expression> context) {
+        return syntaxTree.interpret(context);
     }
 }
