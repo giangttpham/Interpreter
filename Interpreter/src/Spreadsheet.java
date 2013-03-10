@@ -24,27 +24,28 @@ public class Spreadsheet extends JFrame {
 
 	Map<String,Expression> variables = new HashMap<String,Expression>();
 
-	TextField eqtA = new TextField(numberOfColumns);
-	TextField eqtB = new TextField(numberOfColumns);
-	TextField eqtC = new TextField(numberOfColumns);
-	TextField eqtD = new TextField(numberOfColumns);
-	TextField eqtE = new TextField(numberOfColumns);
-	TextField eqtF = new TextField(numberOfColumns);
-	TextField eqtG = new TextField(numberOfColumns);
-	TextField eqtH = new TextField(numberOfColumns);
-	TextField eqtI = new TextField(numberOfColumns);
+//	TextField eqtA = new TextField(numberOfColumns);
+//	TextField eqtB = new TextField(numberOfColumns);
+//	TextField eqtC = new TextField(numberOfColumns);
+//	TextField eqtD = new TextField(numberOfColumns);
+//	TextField eqtE = new TextField(numberOfColumns);
+//	TextField eqtF = new TextField(numberOfColumns);
+//	TextField eqtG = new TextField(numberOfColumns);
+//	TextField eqtH = new TextField(numberOfColumns);
+//	TextField eqtI = new TextField(numberOfColumns);
+//
+//	TextField valueA = new TextField(numberOfColumns);
+//	TextField valueB = new TextField(numberOfColumns);
+//	TextField valueC = new TextField(numberOfColumns);
+//	TextField valueD = new TextField(numberOfColumns);
+//	TextField valueE = new TextField(numberOfColumns);
+//	TextField valueF = new TextField(numberOfColumns);
+//	TextField valueG = new TextField(numberOfColumns);
+//	TextField valueH = new TextField(numberOfColumns);
+//	TextField valueI = new TextField(numberOfColumns);
 
-	TextField valueA = new TextField(numberOfColumns);
-	TextField valueB = new TextField(numberOfColumns);
-	TextField valueC = new TextField(numberOfColumns);
-	TextField valueD = new TextField(numberOfColumns);
-	TextField valueE = new TextField(numberOfColumns);
-	TextField valueF = new TextField(numberOfColumns);
-	TextField valueG = new TextField(numberOfColumns);
-	TextField valueH = new TextField(numberOfColumns);
-	TextField valueI = new TextField(numberOfColumns);
-
-
+	TextField[] eqtView = new TextField[9];
+	TextField[] valueView = new TextField[9];
 	
 	public Spreadsheet( int width, int height ) {
 		setTitle( "Button Example" );
@@ -71,30 +72,40 @@ public class Spreadsheet extends JFrame {
 		//equation view
 		Panel equations = new Panel(new FlowLayout());
 
-		equations.add(eqtA);
-		equations.add(eqtB);
-		equations.add(eqtC);
-		equations.add(eqtD);
-		equations.add(eqtE);
-		equations.add(eqtF);
-		equations.add(eqtG);
-		equations.add(eqtH);
-		equations.add(eqtI);
+//		equations.add(eqtA);
+//		equations.add(eqtB);
+//		equations.add(eqtC);
+//		equations.add(eqtD);
+//		equations.add(eqtE);
+//		equations.add(eqtF);
+//		equations.add(eqtG);
+//		equations.add(eqtH);
+//		equations.add(eqtI);
+		
+		for (int i = 0; i < 9; i++){
+			eqtView[i] = new TextField();
+			equations.add(eqtView[i]);
+		}
 		add(equations);
 
 
 		//value view
 		Panel values = new Panel(new FlowLayout());
 
-		values.add(valueA);
-		values.add(valueB);
-		values.add(valueC);
-		values.add(valueD);
-		values.add(valueE);
-		values.add(valueF);
-		values.add(valueG);
-		values.add(valueH);
-		values.add(valueI);
+//		values.add(valueA);
+//		values.add(valueB);
+//		values.add(valueC);
+//		values.add(valueD);
+//		values.add(valueE);
+//		values.add(valueF);
+//		values.add(valueG);
+//		values.add(valueH);
+//		values.add(valueI);
+		
+		for (int i = 0; i < 9; i++){
+			valueView[i] = new TextField();
+			equations.add(valueView[i]);
+		}
 		add(values);
 
 		//done button
