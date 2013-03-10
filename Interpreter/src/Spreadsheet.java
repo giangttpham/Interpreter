@@ -9,6 +9,7 @@ import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,28 +25,11 @@ public class Spreadsheet extends JFrame {
 
 	Map<String,Expression> variables = new HashMap<String,Expression>();
 
-//	TextField eqtA = new TextField(numberOfColumns);
-//	TextField eqtB = new TextField(numberOfColumns);
-//	TextField eqtC = new TextField(numberOfColumns);
-//	TextField eqtD = new TextField(numberOfColumns);
-//	TextField eqtE = new TextField(numberOfColumns);
-//	TextField eqtF = new TextField(numberOfColumns);
-//	TextField eqtG = new TextField(numberOfColumns);
-//	TextField eqtH = new TextField(numberOfColumns);
-//	TextField eqtI = new TextField(numberOfColumns);
-//
-//	TextField valueA = new TextField(numberOfColumns);
-//	TextField valueB = new TextField(numberOfColumns);
-//	TextField valueC = new TextField(numberOfColumns);
-//	TextField valueD = new TextField(numberOfColumns);
-//	TextField valueE = new TextField(numberOfColumns);
-//	TextField valueF = new TextField(numberOfColumns);
-//	TextField valueG = new TextField(numberOfColumns);
-//	TextField valueH = new TextField(numberOfColumns);
-//	TextField valueI = new TextField(numberOfColumns);
 
 	TextField[] eqtView = new TextField[9];
 	TextField[] valueView = new TextField[9];
+
+	ArrayList<State> history = new ArrayList<State>();
 	
 	public Spreadsheet( int width, int height ) {
 		setTitle( "Button Example" );
@@ -72,18 +56,9 @@ public class Spreadsheet extends JFrame {
 		//equation view
 		Panel equations = new Panel(new FlowLayout());
 
-//		equations.add(eqtA);
-//		equations.add(eqtB);
-//		equations.add(eqtC);
-//		equations.add(eqtD);
-//		equations.add(eqtE);
-//		equations.add(eqtF);
-//		equations.add(eqtG);
-//		equations.add(eqtH);
-//		equations.add(eqtI);
-		
+
 		for (int i = 0; i < 9; i++){
-			eqtView[i] = new TextField();
+			eqtView[i] = new TextField(numberOfColumns);
 			equations.add(eqtView[i]);
 		}
 		add(equations);
@@ -92,19 +67,11 @@ public class Spreadsheet extends JFrame {
 		//value view
 		Panel values = new Panel(new FlowLayout());
 
-//		values.add(valueA);
-//		values.add(valueB);
-//		values.add(valueC);
-//		values.add(valueD);
-//		values.add(valueE);
-//		values.add(valueF);
-//		values.add(valueG);
-//		values.add(valueH);
-//		values.add(valueI);
-		
+
+
 		for (int i = 0; i < 9; i++){
-			valueView[i] = new TextField();
-			equations.add(valueView[i]);
+			valueView[i] = new TextField(numberOfColumns);
+			values.add(valueView[i]);
 		}
 		add(values);
 
@@ -114,15 +81,27 @@ public class Spreadsheet extends JFrame {
 		buttons.add(undo);
 		add(buttons);
 		done.addActionListener(new Calculation());
-//		undo.addActionListener(this);
+		undo.addActionListener(new UndoHistory());
 
 		setVisible(true);
 	}
 
 
+	public class UndoHistory implements ActionListener {
+		State currState = new State();
+		@Override
+		public void actionPerformed(ActionEvent arg0){
+		
+			currState = history.remove(history.size()-2);
+			
+			currState.getState(eqtView, valueView);
+			if (history.size() == 1)
+				undo.setEnabled(false);
+		}
+	}
 
 	public class Calculation implements ActionListener {
-		
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
@@ -130,59 +109,39 @@ public class Spreadsheet extends JFrame {
 
 			setVariables();
 
-			valueA.setText(Double.toString(getResult(eqtA.getText())));
-			variables.put("$A", new Number(getResult(eqtA.getText())));
-
-			valueB.setText(Double.toString(getResult(eqtB.getText())));
-			variables.put("$B", new Number(getResult(eqtB.getText())));
-
-			valueC.setText(Double.toString(getResult(eqtC.getText())));
-			variables.put("$C", new Number(getResult(eqtC.getText())));
-
-			valueD.setText(Double.toString(getResult(eqtD.getText())));
-			variables.put("$D", new Number(getResult(eqtD.getText())));
-
-			valueE.setText(Double.toString(getResult(eqtE.getText())));
-			variables.put("$E", new Number(getResult(eqtE.getText())));
-
-			valueF.setText(Double.toString(getResult(eqtF.getText())));
-			variables.put("$F", new Number(getResult(eqtF.getText())));
-
-			valueG.setText(Double.toString(getResult(eqtG.getText())));
-			variables.put("$G", new Number(getResult(eqtG.getText())));
-
-			valueH.setText(Double.toString(getResult(eqtH.getText())));
-			variables.put("$H", new Number(getResult(eqtH.getText())));
-
-			valueI.setText(Double.toString(getResult(eqtI.getText())));
-			variables.put("$I", new Number(getResult(eqtI.getText())));
 
 
+			char name = 'A';
+
+			for (int i =0; i <9; i++){
+				valueView[i].setText(Double.toString(getResult(eqtView[i].getText())));
+				variables.put("$"+name, new Number(getResult(eqtView[i].getText())));
+				name++;
+			}
+
+			getCurrentState();
 		}
 
-		public void setVariables(){
-
-			if (isNumber(eqtA.getText()))
-				variables.put("$A", new Number(Double.parseDouble(eqtA.getText())));
-			if (isNumber(eqtB.getText()))
-				variables.put("$B", new Number(Double.parseDouble(eqtB.getText())));
-			if (isNumber(eqtC.getText()))
-				variables.put("$C", new Number(Double.parseDouble(eqtC.getText())));
-			if (isNumber(eqtD.getText()))
-				variables.put("$D", new Number(Double.parseDouble(eqtD.getText())));
-			if (isNumber(eqtE.getText()))
-				variables.put("$E", new Number(Double.parseDouble(eqtE.getText())));
-			if (isNumber(eqtF.getText()))
-				variables.put("$F", new Number(Double.parseDouble(eqtF.getText())));
-			if (isNumber(eqtG.getText()))
-				variables.put("$G", new Number(Double.parseDouble(eqtG.getText())));
-			if (isNumber(eqtH.getText()))
-				variables.put("$I", new Number(Double.parseDouble(eqtH.getText())));
-			if (isNumber(eqtI.getText()))
-				variables.put("$I", new Number(Double.parseDouble(eqtI.getText())));
-
+		public void getCurrentState() {
+			State currState = new State();
+		
+			currState.setState(eqtView, valueView);
+			
+			history.add(currState);
+			if (history.size() > 1)
+				undo.setEnabled(true);
 		}
 		
+		public void setVariables(){
+
+			char name = 'A';
+			for (int i =0; i < 9; i++){
+				if(isNumber(eqtView[i].getText()))
+					variables.put("$"+name,new Number(Double.parseDouble(eqtView[i].getText())));
+			}
+
+		}
+
 		public Double getResult(String expression){
 
 			Evaluator sentence = new Evaluator(expression);
@@ -202,7 +161,7 @@ public class Spreadsheet extends JFrame {
 			return true;
 		}
 	}
-	
+
 	public static void main( String args[] ) {
 		new Spreadsheet( 1000, 150 );
 	}
