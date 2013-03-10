@@ -1,4 +1,6 @@
+//import java.awt.Label;
 import java.awt.TextField;
+
 
 public class State{
 	String[] currEqts = new String[10];
@@ -15,6 +17,7 @@ public class State{
 		for(int i = 0; i < 9; i++) {
 			equations[i].setText(currEqts[i]) ;
 			values[i].setText(currValues[i]) ;
+	
 		}
 	}
 }
