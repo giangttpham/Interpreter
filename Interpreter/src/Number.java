@@ -1,7 +1,5 @@
 import java.util.Map;
 
-
-
 public class Number implements Expression{
 
     private double number;

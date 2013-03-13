@@ -10,6 +10,7 @@ public class Plus implements Expression{
  
     @Override
     public double interpret(Map<String,Expression> variables)  { 
+    	//carry out the appropriate operation
         return leftOperand.interpret(variables) + rightOperand.interpret(variables);
     }
 

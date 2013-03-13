@@ -13,7 +13,7 @@ public class Multiply implements Expression{
 	
 	@Override
 	public double interpret(Map<String,Expression> variables) {
-		// TODO Auto-generated method stub
+		//carry out the appropriate operation
 		return leftOperand.interpret(variables) * rightOperand.interpret(variables);
 	}
 

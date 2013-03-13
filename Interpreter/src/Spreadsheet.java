@@ -1,7 +1,5 @@
 
-
 import java.awt.Button;
-
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Label;
@@ -17,9 +15,6 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
-
-
-
 public class Spreadsheet extends JFrame {
 
 	int numberOfColumns = 6;
@@ -27,13 +22,14 @@ public class Spreadsheet extends JFrame {
 	Button done = new Button( "Done" );
 	Button undo = new Button ( "Undo");
 
-	Map<String,Expression> numberRef = new HashMap<String,Expression>();
+	//keep track of which one has number and which one holds an expression
+	Map<String,Double> numberRef = new HashMap<String,Double>();
 	Map<String,String> variableRef = new HashMap<String,String>();
 
 	TextField[] eqtView = new TextField[9];
 	TextField[] valueView = new TextField[9];
-	//	Label[] valueView = new Label[9];
 
+	Cell[] cells = new Cell[9];
 	ArrayList<State> history = new ArrayList<State>();
 
 	public Spreadsheet( int width, int height ) {
@@ -47,18 +43,15 @@ public class Spreadsheet extends JFrame {
 		Panel title = new Panel(new GridLayout());
 		char name = 'A';
 		Label col;
-
 		for (int i = 0; i <9; i++){
 			col = new Label ("$" + name, Label.CENTER);
 			name++;
 			title.add(col);
 		}
-
 		add(title);
 
 		//equation view
 		Panel equations = new Panel(new GridLayout());
-
 		for (int i = 0; i < 9; i++){
 			eqtView[i] = new TextField();
 			equations.add(eqtView[i]);
@@ -69,9 +62,6 @@ public class Spreadsheet extends JFrame {
 
 		//value view
 		Panel values = new Panel(new GridLayout());
-
-
-
 		for (int i = 0; i < 9; i++){
 			valueView[i] = new TextField(numberOfColumns);
 			valueView[i].setEditable(false);
@@ -79,7 +69,7 @@ public class Spreadsheet extends JFrame {
 		}
 		add(values);
 
-		//done Button
+		//done and undo button
 		Panel Buttons = new Panel(new FlowLayout(FlowLayout.CENTER));
 		undo.setEnabled(false);
 		Buttons.add(done);
@@ -91,9 +81,8 @@ public class Spreadsheet extends JFrame {
 		setVisible(true);
 	}
 
+	//holds the curretn state of the spreadsheet
 	public class CurrentState implements  KeyListener {
-
-
 
 		public void getCurrentState(){
 			State currState = new State();
@@ -104,41 +93,28 @@ public class Spreadsheet extends JFrame {
 				undo.setEnabled(true);
 		}
 
-
-
 		@Override
 		public void keyPressed(KeyEvent e) {
-			// TODO Auto-generated method stub
-
 			getCurrentState();
-
 		}
-
-
 
 		@Override
 		public void keyReleased(KeyEvent e) {
 			// TODO Auto-generated method stub
-
 		}
-
-
 
 		@Override
 		public void keyTyped(KeyEvent e) {
 			// TODO Auto-generated method stub
-
 		}
-
 	}
-
-
 
 	public class UndoHistory implements ActionListener {
 		State currState = new State();
 		@Override
 		public void actionPerformed(ActionEvent arg0){
 
+			//save the current state to the history list
 			currState = history.remove(history.size()-1);
 
 			currState.getState(eqtView, valueView);
@@ -147,110 +123,111 @@ public class Spreadsheet extends JFrame {
 		}
 	}
 
+	//when the user clicks done, calculate the result
 	public class Calculation implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			String result;
-
+			calculate();
+		}
+		public void calculate() {
 			setVariables();
 
-
-
-			char name = 'A';
-
+			//get the result
 			for (int i =0; i <9; i++){
-				result = getResult(eqtView[i].getText(),Character.toString(name));
-
-				if (!result.equals("Error")){
-					numberRef.put("$"+name, new Number(Double.parseDouble(result)));
-					valueView[i].setText(result);
-				}
-				else {
-					variableRef.put("$"+name, "Error");
+				if (getResult(cells[i]) == "Error")
 					valueView[i].setText("Circular Reference");
-				}
-				name++;
 			}
 
+			//display the result of each cell
+			for (int i = 0; i < 9; i++)
+				if (!valueView[i].getText().contains( "Circular Reference"))
+					valueView[i].setText(Double.toString(cells[i].value));
 
 			CurrentState state = new CurrentState();
 			state.getCurrentState();
-
 		}
-
-
 
 		public void setVariables(){
 
 			char name = 'A';
+			double currNum;
+
 			for (int i =0; i < 9; i++){
-				if(isNumber(eqtView[i].getText()))
-					numberRef.put("$"+name,new Number(Double.parseDouble(eqtView[i].getText())));
+				cells[i] = new Cell();
+				cells[i].name = "$" +name;
+				cells[i].formula = eqtView[i].getText();
+
+				//get the current variable value and expression
+				if(isNumber(eqtView[i].getText())) {
+					currNum = Double.parseDouble(eqtView[i].getText());
+					cells[i].setValue(currNum);
+					numberRef.put(cells[i].name,currNum);
+				}
 				else
-					variableRef.put("$"+name, eqtView[i].getText());
+					variableRef.put(cells[i].name, cells[i].formula);
+
 				name++;
 			}
-
 		}
 
-		public String getResult(String expression, String name){
+		//check Circular Reference
+		public boolean checkCirRef(Cell currCell){
+
+			String expression = currCell.formula;
 			ArrayList<String> reference = new ArrayList<String>();
 			String currRef;
 			String currExp;
-			String currNum; 
-			String lastRef;
-			String currLast;
-			
+			String name = currCell.name;
+
 			for (String token: expression.split(" ")){
 				reference.add(token);
 			}
 
-			lastRef = reference.get(reference.size()-1);
-			
-			name = "$" + name;
-			while (!containAllNumbers(reference) ){
-				//for (int i = 0; i < reference.size(); i++){
-				do {
-					currExp = reference.remove(0);
-					if (!isNumber(currExp) && !isOperation(currExp)) {
-						if (!numberRef.containsKey(currExp)) {
-							currRef = variableRef.get(currExp);
-							for (String token: currRef.split(" ")){
-								reference.add(token);
-								if (reference.contains(name) || reference.contains("Error"))
-									return ("Error");
-							}	
-						}
-						else {
-							currNum = Double.toString(numberRef.get(currExp).interpret(numberRef));
-							reference.add(currNum);
-						}
-
+			//after expanding, if a cell contains itself, it's circular ref
+			while (!reference.isEmpty() ){
+				currExp = reference.remove(0);
+				if (!isNumber(currExp) && !isOperation(currExp)) {
+					if (!numberRef.containsKey(currExp)) {
+						currRef = variableRef.get(currExp);
+						for (String token: currRef.split(" ")){
+							reference.add(token);
+							if (reference.contains(name) || reference.contains("Error"))
+								return true;
+						}	
 					}
-					else
-						reference.add(currExp);
-				
-				} while (!reference.get(reference.size()-1).equals(lastRef));
+				}
 			}
 
-			expression = "";
-			for (int i = 0; i < reference.size(); i++){
-				expression += reference.get(i)+" ";
-			}
-			Evaluator sentence = new Evaluator(expression);
-			Double result = sentence.interpret(numberRef);
-
-			return Double.toString(result);
+			return false;
 		}
 
-		public boolean containAllNumbers(ArrayList<String> list) {
-			for (int i = 0; i < list.size(); i++){
-				if (!isNumber(list.get(i)) && !isOperation(list.get(i)))
-					return false;
+		public String getResult (Cell currCell) {
+
+			String expression = currCell.formula;
+			//set variable list for each cell
+			for (String token: expression.split(" ")) {
+				if (!isNumber(token) && !isOperation(token)){
+					currCell.setVariable(getCell(token));
+				}
+
 			}
-			return true;
+
+			//check circular reference
+			Evaluator sentence = new Evaluator(expression);
+			if (checkCirRef(currCell)) 
+				return "Error";
+			else {
+				double result = sentence.interpret(currCell.variables);
+				currCell.setValue(result);
+				return Double.toString(result);
+			}
+		}
+
+		public Cell getCell(String name) {
+			int index = name.charAt(1) - 'A';
+			return cells[index];
 		}
 
 		public boolean isOperation(String currToken) {
@@ -261,12 +238,14 @@ public class Spreadsheet extends JFrame {
 			ops.add("/");
 			ops.add("sin");
 			ops.add("cos");
+			ops.add("log2");
 
 			if (!ops.contains(currToken))
 				return false;
 			return true;
 
 		}
+
 		public boolean isNumber(String currToken){
 			try {
 				Double.parseDouble(currToken);

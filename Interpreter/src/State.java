@@ -1,7 +1,7 @@
-//import java.awt.Label;
+
 import java.awt.TextField;
 
-
+//this class represents the current state of the spreadsheet
 public class State{
 	String[] currEqts = new String[10];
 	String[] currValues = new String[10];

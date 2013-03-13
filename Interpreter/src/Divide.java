@@ -12,7 +12,7 @@ public class Divide implements Expression {
 	
 	@Override
 	public double interpret(Map<String,Expression> variables) {
-		// TODO Auto-generated method stub
+		//carry out the appropriate operations
 		if (rightOperand.interpret(variables) == 0) {
 			System.out.println("Can't devide by 0");
 			return 0;

@@ -10,6 +10,7 @@ public class Sine implements Expression {
 
 	@Override
 	public double interpret(Map<String,Expression> variables) {
+		//carry out the appropriate operation
 		return Math.sin(Math.toRadians(operand.interpret(variables)));
 	}
 	

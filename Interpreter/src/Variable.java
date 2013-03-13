@@ -9,7 +9,7 @@ public class Variable implements Expression{
 
 	@Override
 	public double interpret(Map<String, Expression> variables) {
-		// TODO Auto-generated method stub
+		//return the correct value for the variable
 		if(null==variables.get(name)) return 0; //Either return new Number(0).
 		return variables.get(name).interpret(variables); 
 	}

@@ -1,7 +1,7 @@
 import java.util.Map;
 import java.util.Stack;
 
-
+//evaluate an expression and break it down into appropriate object
 public class Evaluator implements Expression{
 	private Expression syntaxTree;
 	 
@@ -40,6 +40,11 @@ public class Evaluator implements Expression{
             else if (token.equals("cos")) {
             	Expression operand = expressionStack.pop();
             	Expression subExpression = new Cosine(operand);
+            	expressionStack.push(subExpression);
+            }
+            else if (token.equals("log2")) {
+            	Expression operand = expressionStack.pop();
+            	Expression subExpression = new Log2(operand);
             	expressionStack.push(subExpression);
             }
             else if (isNumber(token)) {
