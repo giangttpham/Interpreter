@@ -1,4 +1,5 @@
 
+
 import java.awt.Button;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -261,6 +262,8 @@ public class Spreadsheet extends JFrame {
 	public static void main( String args[] ) {
 		new Spreadsheet( 1000, 150 );
 	}
+	
+	//testing clone
 }
 
 
